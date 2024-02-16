@@ -6,11 +6,7 @@ import axios from 'axios';
 function SignUp() {
   const navigate = useNavigate();
 
-  const [formdata, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+  const [formdata, setFormData] = useState({});
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
