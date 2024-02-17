@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {signInStart,signInSuccess,signInFailure} from "../redux/user/userStore.js"
 import {  useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/oAuth.jsx';
 
 function SignIn() {
   const navigate = useNavigate();
-
+  
   const [formdata, setFormData] = useState({});
 
   const dispatch = useDispatch();
@@ -52,7 +53,6 @@ function SignIn() {
     }
   };
   
-
   return (
     <div className='max-w-lg mx-auto'>
       <h1 className='text-center font-semibold text-3xl my-7'>Sign In</h1>
@@ -78,6 +78,7 @@ function SignIn() {
         >
           {loading ? 'loading' : 'Sign In'}
         </button>
+         <OAuth />
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Don't Have an account?</p>
