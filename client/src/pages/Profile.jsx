@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { app } from '../firebase';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
-import { updateUserStart, updateUserFailure, updateUserSuccess } from '../redux/user/userStore';
+import { updateUserStart, updateUserFailure, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userStore';
 
 function Profile() {
   const { currentUser , loading , error } = useSelector((state) => state.user);
@@ -82,6 +82,28 @@ function Profile() {
     }
   };
 
+  const handleUserDelete = async ()=>{
+    try {
+      dispatch(deleteUserStart());
+      if (!currentUser || !currentUser._id) {
+        dispatch(deleteUserFailure("User ID is missing"));
+        return;
+      }
+     const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+  method: 'DELETE',
+});
+      const data = await res.json();
+      if (data.success === false) {
+      dispatch(deleteUserFailure(data.message));
+    return;
+  }
+  dispatch(deleteUserSuccess(data));
+  
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  }
+
   return (
     <div className='max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold my-7 text-center'>Profile</h1>
@@ -121,8 +143,8 @@ function Profile() {
             {loading ? "loading..." : "Update"}
           </button>
       </form>
-      <div className='flex justify-between text-red-600 mt-5'>
-        <span>Delete Account</span>
+      <div  className='flex justify-between text-red-600 mt-5 cursor-pointer'>
+        <span onClick={handleUserDelete} >Delete Account</span>
         <span>Sign Out</span>
       </div>
       <p className='text-red-500 my-5'>{error ? error : ''}</p>
